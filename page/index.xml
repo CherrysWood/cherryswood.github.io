@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pages on 樱木の碎碎念</title>
+    <link>https://www.cherryswood.cloudns.ch/page/</link>
+    <description>Recent content in Pages on 樱木の碎碎念</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 17 Aug 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.cherryswood.cloudns.ch/page/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>https://www.cherryswood.cloudns.ch/about/</link>
+      <pubDate>Sat, 17 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>https://www.cherryswood.cloudns.ch/about/</guid>
+      <description>Waiting for summer to the end About myself/基本信息 你好，这里是 樱木 一个善用搜索引擎的文科生 文学/哲学/社会科学爱好者 单机游戏爱好者，手残党一枚 美食节目爱好</description>
+    </item>
+    <item>
+      <title>Archives</title>
+      <link>https://www.cherryswood.cloudns.ch/archives/</link>
+      <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
+      <guid>https://www.cherryswood.cloudns.ch/archives/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Friends</title>
+      <link>https://www.cherryswood.cloudns.ch/links/</link>
+      <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
+      <guid>https://www.cherryswood.cloudns.ch/links/</guid>
+      <description> Friends Link </description>
+    </item>
+    <item>
+      <title>Search</title>
+      <link>https://www.cherryswood.cloudns.ch/search/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.cherryswood.cloudns.ch/search/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>
