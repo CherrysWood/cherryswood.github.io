@@ -60,8 +60,8 @@
 &lt;/figure&gt;
 但经过短暂使用后发现了对个人来说很严重的问题，笔者本人习惯使用九键打字，但键盘在九键状态下连接键盘进行打字断开后自动切换26键（推测是连接和断开键盘后会重置一次Activity而搜狗没有单独记录键盘状态），因此每次断开键盘要打字需要手动切换键盘还是相当不方便的&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;另&lt;/strong&gt;： 这个bug几乎在搜狗输入法（甚至部分百度输入法中）稳定复现，有理由怀疑是搜狗那边主分支的问题，当然可能也和三星键盘连接断开时对应用界面的处理方式有关系。&lt;/p&gt;
-&lt;p&gt;之后笔者就开始寻找比较合适的输入法，在寻找过程中发现有一部分用户推荐Gboard,搜索相关话题之后发现&lt;strong&gt;Google&lt;/strong&gt; 在近期（几个月前）支持了触控笔手写识别（原本除三星键盘外其他输入法不会支持）&lt;br/&gt;
-&lt;br/&gt;&lt;figure 
+&lt;p&gt;之后笔者就开始寻找比较合适的输入法，在寻找过程中发现有一部分用户推荐Gboard,搜索相关话题之后发现&lt;strong&gt;Google&lt;/strong&gt; 在近期（几个月前）支持了触控笔手写识别（原本除三星键盘外其他输入法不会支持）&lt;code&gt;&amp;lt;br/&amp;gt;&lt;/code&gt;
+&lt;code&gt;&amp;lt;br/&amp;gt;&lt;/code&gt;&lt;figure 
 	
 		class=&#34;gallery-image&#34; 
 		style=&#34;
@@ -80,8 +80,8 @@
 	&lt;figcaption&gt;Write in text field&lt;/figcaption&gt;
 	
 &lt;/figure&gt;
-但在试用后发现两个特别抽象的问题：&lt;br/&gt;&lt;strong&gt;1.&lt;/strong&gt;	Google的随手写功能与GKD以及李跳跳类的辅助功能冲突，打开此类型软件后会立即失去触控笔输入功能，且笔者未能发现有效方式使两者共存。
-&lt;br/&gt; &lt;strong&gt;2.&lt;/strong&gt; Gboard似乎未能支持符合笔者直觉的Shift切换中英文输入法，而是跟随Samsung的设置使用组合键进行切换中英文
+但在试用后发现两个特别抽象的问题：&lt;code&gt;&amp;lt;br/&amp;gt;&lt;/code&gt;&lt;strong&gt;1.&lt;/strong&gt;	Google的随手写功能与GKD以及李跳跳类的辅助功能冲突，打开此类型软件后会立即失去触控笔输入功能，且笔者未能发现有效方式使两者共存。
+&lt;code&gt;&amp;lt;br/&amp;gt;&lt;/code&gt; &lt;strong&gt;2.&lt;/strong&gt; Gboard似乎未能支持符合笔者直觉的Shift切换中英文输入法，而是跟随Samsung的设置使用组合键进行切换中英文
 &lt;figure 
 	
 		class=&#34;gallery-image&#34; 
@@ -101,13 +101,13 @@
 	&lt;figcaption&gt;Samsung的键盘切换方式&lt;/figcaption&gt;
 	
 &lt;/figure&gt;
-寻找解决方式的时候看到Keymapper这个插件，但似乎对Shift映射组合键的支持并不好，例如设置短按Shift映射组合键时长按Shift再按某些标点符号会导致打不出相关标点（如 “？”），无奈只能放弃Gboard。&lt;br/&gt;直到当天在一加Pad Pro板块闲逛时发现了搜狗输入法的一加定制版，下载之后惊奇的发现随手写功能居然是可用的，并且中文输入的候选栏是基本跟随的，为什么是基本跟随呢？因为笔者在打这篇文章的时候发现这个候选框在上下反复横跳（笑）
+寻找解决方式的时候看到Keymapper这个插件，但似乎对Shift映射组合键的支持并不好，例如设置短按Shift映射组合键时长按Shift再按某些标点符号会导致打不出相关标点（如 “？”），无奈只能放弃Gboard。&lt;code&gt;&amp;lt;br/&amp;gt;&lt;/code&gt;直到当天在一加Pad Pro板块闲逛时发现了搜狗输入法的一加定制版，下载之后惊奇的发现随手写功能居然是可用的，并且中文输入的候选栏是基本跟随的，为什么是基本跟随呢？因为笔者在打这篇文章的时候发现这个候选框在上下反复横跳（笑）
 当然问题还是一样的，断开键盘后屏幕键盘自动会切回26键，为了解决这个问题笔者实在是翻了不少帖子，最终在某篇在DEX模式下使用第三方输入法的教程得到启发。
-&lt;br/&gt;既然我们已知：&lt;br/&gt;&lt;strong&gt;三星键盘&lt;/strong&gt;：可用手写笔/屏幕键盘不会随键盘断开重置到26Key/链接键盘中文输入候选框在下方
-&lt;br/&gt;&lt;strong&gt;搜狗定制&lt;/strong&gt;:可用手写笔/断开键盘重置26Key/连接键盘候选框跟随&lt;br/&gt;
-那我们能不能在连接键盘时使用搜狗定制版而在断开键盘时使用三星键盘呢?这样在任何情况下都能确保我们能使用手写笔输入且不会出现键盘重置的情况&lt;br/&gt;这就需要 用到一个叫&lt;a class=&#34;link&#34; href=&#34;https://absinthe.life/Anywhere-Docs/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+&lt;code&gt;&amp;lt;br/&amp;gt;&lt;/code&gt;既然我们已知：&lt;code&gt;&amp;lt;br/&amp;gt;&lt;/code&gt;&lt;strong&gt;三星键盘&lt;/strong&gt;：可用手写笔/屏幕键盘不会随键盘断开重置到26Key/链接键盘中文输入候选框在下方
+&lt;code&gt;&amp;lt;br/&amp;gt;&lt;/code&gt;&lt;strong&gt;搜狗定制&lt;/strong&gt;:可用手写笔/断开键盘重置26Key/连接键盘候选框跟随&lt;code&gt;&amp;lt;br/&amp;gt;&lt;/code&gt;
+那我们能不能在连接键盘时使用搜狗定制版而在断开键盘时使用三星键盘呢?这样在任何情况下都能确保我们能使用手写笔输入且不会出现键盘重置的情况&lt;code&gt;&amp;lt;br/&amp;gt;&lt;/code&gt;这就需要 用到一个叫&lt;a class=&#34;link&#34; href=&#34;https://absinthe.life/Anywhere-Docs/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Anywhere-&lt;/a&gt; 的小工具，通过&lt;a class=&#34;link&#34; href=&#34;https://shizuku.rikka.app/zh-hans/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;shizuku&lt;/a&gt; 提权执行shell来完成几个输入法之间的切换，这里给出切换两个输入法的命令&lt;br/&gt;&lt;br/&gt;&lt;strong&gt;切换为三星输入法&lt;/strong&gt;
+    &gt;shizuku&lt;/a&gt; 提权执行shell来完成几个输入法之间的切换，这里给出切换两个输入法的命令&lt;code&gt;&amp;lt;br/&amp;gt;&amp;lt;br/&amp;gt;&lt;/code&gt;&lt;strong&gt;切换为三星输入法&lt;/strong&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
@@ -116,7 +116,7 @@
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ime set com.samsung.android.honeyboard/.service.HoneyBoardService&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;br/&gt;&lt;strong&gt;切换为搜狗输入法&lt;/strong&gt;
+&lt;code&gt;&amp;lt;br/&amp;gt;&lt;/code&gt;&lt;strong&gt;切换为搜狗输入法&lt;/strong&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
@@ -124,7 +124,7 @@
 &lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ime set com.sohu.inputmethod.sogouoem/.SogouIME&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;br/&gt;
+&lt;/div&gt;&lt;code&gt;&amp;lt;br/&amp;gt;&lt;/code&gt;
 在Anywhere中新建卡片并创建好Shortcut后，在日常程序中设置如下：
 &lt;figure 
 	
@@ -145,7 +145,7 @@
 	&lt;figcaption&gt;连接时切换到搜狗输入法&lt;/figcaption&gt;
 	
 &lt;/figure&gt;
-&lt;br/&gt;
+&lt;code&gt;&amp;lt;br/&amp;gt;&lt;/code&gt;
 &lt;figure 
 	
 		class=&#34;gallery-image&#34; 
@@ -165,10 +165,10 @@
 	&lt;figcaption&gt;断开时切换至三星键盘&lt;/figcaption&gt;
 	
 &lt;/figure&gt;
-&lt;br/&gt;
+&lt;code&gt;&amp;lt;br/&amp;gt;&lt;/code&gt;
 &lt;strong&gt;注意：&lt;/strong&gt; Samsung/SOUGOU为自己设定的shortcut名称，因你的设置而改变，如果对Anywhere设置过程有疑问可参考&lt;a class=&#34;link&#34; href=&#34;https://www.coolapk.com/feed/39012003?shareKey=MTNhZTcxYmMwNWZmNjZiZjVmOGI~&amp;amp;shareUid=3269206&amp;amp;shareFrom=com.coolapk.market_14.3.0-beta2&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;这篇文章&lt;/a&gt;&lt;br/&gt;&lt;/p&gt;
-&lt;h2 id=&#34;总结&#34;&gt;总结：&lt;/h2&gt;
+    &gt;这篇文章&lt;/a&gt;&lt;code&gt;&amp;lt;br/&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
 &lt;p&gt;如果你是一个习惯26键的玩家，那么搜狗输入法定制版对于三星实体键盘输入和手写笔输入已经算比较友好，而如果你习惯九键，可能就需要按照文章进行额外设置。&lt;/p&gt;
 </description>
         </item>
