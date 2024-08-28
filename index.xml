@@ -62,7 +62,7 @@
 	&lt;/a&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;注意：本校校园网认证使用旧版算法的锐捷客户端，因此采用mentohust模拟认证客户端，如果你的学校采用网页认证可能需要加入Python3软件包并寻找合适的认证代码，如果mentohust不适用你的学校可能是采用了新版算法，请参考&lt;a class=&#34;link&#34; href=&#34;https://github.com/updateing/minieap&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+&lt;p&gt;&lt;strong&gt;注意：本校校园网认证使用旧版算法的锐捷客户端，因此采用mentohust模拟认证客户端，如果你的学校采用网页认证可能需要加入Python3软件包并寻找合适的认证代码，如果mentohust不适用你的学校的锐捷客户端，那么学校可能是采用了新版算法，请参考&lt;a class=&#34;link&#34; href=&#34;https://github.com/updateing/minieap&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Minieap项目&lt;/a&gt;。&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;下面的自定义选项按自己的需求更改即可，也可不改&lt;/p&gt;
 &lt;p&gt;之后点击构建，等待构建完成后下载留存文件&lt;/p&gt;
