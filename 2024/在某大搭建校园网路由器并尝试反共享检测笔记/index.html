@@ -9,7 +9,7 @@
 <meta property='og:description' content='这篇文章记录了笔者在校园网环境突然添加设备共享检测后的处理及踩坑'>
 <meta property='og:url' content='https://www.cherryswood.cloudns.ch/2024/%E5%9C%A8%E6%9F%90%E5%A4%A7%E6%90%AD%E5%BB%BA%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B9%B6%E5%B0%9D%E8%AF%95%E5%8F%8D%E5%85%B1%E4%BA%AB%E6%A3%80%E6%B5%8B%E7%AC%94%E8%AE%B0/'>
 <meta property='og:site_name' content='樱木の碎碎念'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='校园网路由器' /><meta property='article:tag' content='OPenWRT' /><meta property='article:tag' content='Shellcrash' /><meta property='article:published_time' content='2024-08-27T14:01:12&#43;08:00'/><meta property='article:modified_time' content='2024-08-28T08:43:14&#43;08:00'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='校园网路由器' /><meta property='article:tag' content='OPenWRT' /><meta property='article:tag' content='Shellcrash' /><meta property='article:published_time' content='2024-08-27T14:01:12&#43;08:00'/><meta property='article:modified_time' content='2024-08-28T10:52:42&#43;08:00'/>
 <meta name="twitter:title" content="在某大搭建校园网路由器并尝试反共享检测笔记">
 <meta name="twitter:description" content="这篇文章记录了笔者在校园网环境突然添加设备共享检测后的处理及踩坑">
     <link rel="shortcut icon" href="https://www.cherryswood.cloudns.ch/favicon.ico" />
@@ -308,7 +308,7 @@
 
 
                 <time class="article-words">
-                    4840字，预计需要10分钟
+                    4827字，预计需要10分钟
                 </time>
             </div>
         
@@ -322,20 +322,20 @@
     
     <h2 id="开始之前">开始之前</h2>
 <p>笔者就读于一所名不见经传的双非大学，没有精力也没有兴趣深入了解中国校园网总体的发展模式和现状，因而这篇文章所叙述的校园网环境状况可能并不适用于其他学校，文章内的所有评价也仅代表笔者有限的个人视角。阅读过程中如有不适可自行跳转到自己需要的部分进行阅读即可。</p>
-<p>另外，此反检测方案有一定成本，如果没有合适的服务器（节点）请参考**<a class="link" href="https://hetong-re4per.com/posts/multi-device-detection/"  target="_blank" rel="noopener"
-    >这篇文章</a>**编译固件及后续设置</p>
+<p>另外，此反检测方案有一定成本，如果没有合适的服务器（节点）请参考<a class="link" href="https://hetong-re4per.com/posts/multi-device-detection/"  target="_blank" rel="noopener"
+    >这篇文章</a>编译固件及后续设置</p>
 <h2 id="背景">背景</h2>
 <p>先粗略介绍一下本校的校园网基本状况：我校校园网由移动联通电信三方混合供应，不允许学生从校外办理宽带使用，校园宽带强行绑定一张校园卡，月租为59每月，但校园网宽带连接后需要使用学号进行身份认证，但同一学号仅支持两个设备在线（一般为电脑/手机），笔者对这个价格其实没有意见，但限制的设备数对笔者而言实在有些捉襟见肘。因而开始研究如何使用路由器进行网络共享。</p>
 <h2 id="过程">过程</h2>
 <p>首先需要明确的是，在考虑校园网的设备共享检测之前，我们首先需要解决一个问题：<strong>如何使我们的路由器具有完成校园网认证的能力？</strong> 在Windows环境下进行常规认证时我们需要在网页进行认证(如深蓝)或下载某些认证客户端（如锐捷)进行认证，对于网页，我们可以使用Python程序解决，对于客户端我们同样可以使用插件解决，但想要在路由器中安装Python或插件都需要一个相对开放的系统，而大多数路由器的原厂系统显然不在此列，因此我们需要为路由器重新刷写一个系统，这里以<strong>Openwrt</strong>为例</p>
 <h3 id="解锁sshtelnet">解锁SSH（Telnet）</h3>
 <p>想要自由刷写路由器内的文件我们首先要获得SSH权限，这一步各个路由器各有不同，已知的是几乎大部分小米路由器都有成熟的解锁SSH(Telnet))的方案（没有的话也有申请解锁的官方渠道），因此这部分的教程笔者会列出几个后文提到的路由器型号的教程，其他型号的路由器建议自行在Bing或Google搜索 “路由器型号＋解锁SSH”如果还未购买路由器建议看看斐讯K2P/小米R3G/小米（红米AC2100）这几个型号，解锁方式都不算复杂</p>
-<p>对于Xiaomi/Redmi AC2100:可以参考**<a class="link" href="https://blog.csdn.net/qq_29183811/article/details/114577257"  target="_blank" rel="noopener"
-    >这篇文章</a> **(参照此教程可以跳过下一步刷写Breed的步骤)</p>
-<p>对于小米路由器3g可以参考**<a class="link" href="https://www.right.com.cn/forum/thread-8278054-1-1.html"  target="_blank" rel="noopener"
-    >这篇文章</a>**</p>
-<p>对于斐讯K2P可以参考**<a class="link" href="https://www.right.com.cn/forum/thread-217088-1-1.html"  target="_blank" rel="noopener"
-    >这篇文章</a>**</p>
+<p>对于Xiaomi/Redmi AC2100:可以参考<a class="link" href="https://blog.csdn.net/qq_29183811/article/details/114577257"  target="_blank" rel="noopener"
+    >这篇文章</a> (参照此教程可以跳过下一步刷写Breed的步骤)</p>
+<p>对于小米路由器3g可以参考<a class="link" href="https://www.right.com.cn/forum/thread-8278054-1-1.html"  target="_blank" rel="noopener"
+    >这篇文章</a></p>
+<p>对于斐讯K2P可以参考<a class="link" href="https://www.right.com.cn/forum/thread-217088-1-1.html"  target="_blank" rel="noopener"
+    >这篇文章</a></p>
 <h3 id="刷入breed">刷入Breed</h3>
 <blockquote>
 <p>Breed 是国内个人 <a class="link" href="https://github.com/hackpascal"  target="_blank" rel="noopener"
@@ -343,10 +343,10 @@
 <p>因为有些官方升级固件自带 bootloader，如果从官方固件升级，会导致现有 bootloader 被覆盖。而当 Breed 更新固件时，它会自动删除固件附带的引导加载程序，因此可以防止 Breed 被覆盖</p>
 </blockquote>
 <p>令人遗憾地是，Breed的刷入在不同路由器下同样也有所不同，因此同样放上几个型号的刷入教程供各位参考</p>
-<p>对于小米路由器3g可以参考**<a class="link" href="https://blog.csdn.net/michaelchain/article/details/124263191"  target="_blank" rel="noopener"
-    >这篇文章</a>**</p>
-<p>对于斐讯K2P可以参考**<a class="link" href="https://ericclose.github.io/phicomm-k2p-Padavan.html"  target="_blank" rel="noopener"
-    >这篇文章</a>**</p>
+<p>对于小米路由器3g可以参考<a class="link" href="https://blog.csdn.net/michaelchain/article/details/124263191"  target="_blank" rel="noopener"
+    >这篇文章</a></p>
+<p>对于斐讯K2P可以参考<a class="link" href="https://ericclose.github.io/phicomm-k2p-Padavan.html"  target="_blank" rel="noopener"
+    >这篇文章</a></p>
 <p><strong>注意</strong>：上面列出的大部分教程中都有备份原固件这一步，为了确保安全请务必进行备份</p>
 <h3 id="云编译openwrt">云编译OpenWRT</h3>
 <p>打开<a class="link" href="openwrt.ai" >openwrt.ai</a></p>
@@ -412,14 +412,20 @@
 <h3 id="部署反检测">部署反检测</h3>
 <p>经过实践，本校在不久前部署了设备共享检测方案，如果你的路由器进行上一步动作后可以正常使用则不必进行后面的动作</p>
 <p>考虑到成本问题，这里推荐优先使用比较常用的UA2F＋防火墙规则的反检测方案，但云编译固件需要的软件包和本教程有所不同</p>
-<p>请参考**<a class="link" href="https://hetong-re4per.com/posts/multi-device-detection/"  target="_blank" rel="noopener"
-    > 这篇文章</a>**</p>
+<p>请参考<a class="link" href="https://hetong-re4per.com/posts/multi-device-detection/"  target="_blank" rel="noopener"
+    >这篇文章</a></p>
 <p>若不想使用此方案或效果不佳，你需要拥有自己的服务器节点或<strong>海外服务器节点的订阅链接，具体操作如下：</strong></p>
 <p><strong>警告：进行下面的步骤之前，您需要确保自己拥有至少一个公网服务器 节点 或 订阅链接</strong></p>
 <p>进入路由器后台，点击服务-终端，输入你的路由器管理员用户名（root）和密码</p>
 <p>输入以下代码</p>
-<pre><code>export url='https://fastly.jsdelivr.net/gh/juewuy/ShellCrash@master' &amp;&amp; sh -c &quot;(curl -kfsSl (curl−kfsSlurl/install.sh)&quot; &amp;&amp; source /etc/profile &amp;&gt; /dev/null
-</code></pre>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">export url=&#39;https://fastly.jsdelivr.net/gh/juewuy/ShellCrash@master&#39; <span class="err">&amp;&amp;</span> sh -c &#34;(curl -kfsSl (curl−kfsSlurl/install.sh)&#34; <span class="err">&amp;&amp;</span> source /etc/profile <span class="err">&amp;</span>&gt; /dev/null</span></span></code></pre></td></tr></table>
+</div>
+</div>
 <p>选择 <code>1 公测版，</code>选择 <code>1 安装在 /etc 目录</code>，选择 <code>1 确认</code>。安装完成之后，运行 <code>crash</code> 命令，选择 <code>1 路由设备配置局域网透明代理</code>，选择 <code> 0 不启用推荐的自动任务配置</code>，选择 <code>0 不导入配置文件</code>，选择 <code> 0 不立即启动服务</code>，此时会进入 ShellCrash 的主菜单，选择 <code>0 退出脚本</code>。</p>
 <p>接下来，在终端输入 <code>crash</code>呼出主菜单，输入 <code>9 更新/卸载</code>， <code>2 切换内核文件</code>  <code>3 Meta内核</code>，此时Shellcrash会自动下载内核文件并安装，选择 <code>0不保留相关数据库文件</code></p>
 <p>之后请获取一份用于反检测的配置文件，这里给出<a class="link" href="https://github.com/SunBK201"  target="_blank" rel="noopener"
@@ -437,23 +443,45 @@ proxy-providers:
 <p>导入完成后会返回主界面，输入1来重启crash服务，等待片刻后服务会成功重启，待网络连接正常后反检测部署完成</p>
 <h3 id="防火墙配置">防火墙配置</h3>
 <p>在确保Shellcrash可以正常运行后，进入OpenWRT 网络-防火墙-自定义规则中添加以下规则</p>
-<pre><code>iptables -t mangle -A POSTROUTING -j TTL --ttl-set 128
-
-</code></pre>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">iptables -t mangle -A POSTROUTING -j TTL --ttl-set 128</span></span></code></pre></td></tr></table>
+</div>
+</div>
 <p>对于某些学校，可能还需要：</p>
-<pre><code># 由于本校局域网是A类网，所以我将这一条注释掉了，具体要不要注释结合你所在的校园网
-# iptables -t mangle -A IPID_MOD -d 10.0.0.0/8 -j RETURN
-iptables -t mangle -A IPID_MOD -d 172.16.0.0/12 -j RETURN
-iptables -t mangle -A IPID_MOD -d 192.168.0.0/16 -j RETURN
-iptables -t mangle -A IPID_MOD -d 255.0.0.0/8 -j RETURN
-iptables -t mangle -A IPID_MOD -j MARK --set-xmark 0x10/0x10
-iptables -t nat -N ntp_force_local
-iptables -t nat -I PREROUTING -p udp --dport 123 -j ntp_force_local
-iptables -t nat -A ntp_force_local -d 0.0.0.0/8 -j RETURN
-iptables -t nat -A ntp_force_local -d 127.0.0.0/8 -j RETURN
-iptables -t nat -A ntp_force_local -d 192.168.0.0/16 -j RETURN
-iptables -t nat -A ntp_force_local -s 192.168.0.0/16 -j DNAT --to-destination 192.168.1.1
-</code></pre>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"># 由于本校局域网是A类网，所以我将这一条注释掉了，具体要不要注释结合你所在的校园网
+</span></span><span class="line"><span class="cl"># iptables -t mangle -A IPID_MOD -d 10.0.0.0/8 -j RETURN
+</span></span><span class="line"><span class="cl">iptables -t mangle -A IPID_MOD -d 172.16.0.0/12 -j RETURN
+</span></span><span class="line"><span class="cl">iptables -t mangle -A IPID_MOD -d 192.168.0.0/16 -j RETURN
+</span></span><span class="line"><span class="cl">iptables -t mangle -A IPID_MOD -d 255.0.0.0/8 -j RETURN
+</span></span><span class="line"><span class="cl">iptables -t mangle -A IPID_MOD -j MARK --set-xmark 0x10/0x10
+</span></span><span class="line"><span class="cl">iptables -t nat -N ntp_force_local
+</span></span><span class="line"><span class="cl">iptables -t nat -I PREROUTING -p udp --dport 123 -j ntp_force_local
+</span></span><span class="line"><span class="cl">iptables -t nat -A ntp_force_local -d 0.0.0.0/8 -j RETURN
+</span></span><span class="line"><span class="cl">iptables -t nat -A ntp_force_local -d 127.0.0.0/8 -j RETURN
+</span></span><span class="line"><span class="cl">iptables -t nat -A ntp_force_local -d 192.168.0.0/16 -j RETURN
+</span></span><span class="line"><span class="cl">iptables -t nat -A ntp_force_local -s 192.168.0.0/16 -j DNAT --to-destination 192.168.1.1</span></span></code></pre></td></tr></table>
+</div>
+</div>
 <h3 id="故障排查">故障排查</h3>
 <h4 id="性能问题导致的服务重启或无法启动">性能问题导致的服务重启或无法启动</h4>
 <p>按上面的步骤配置完成后，若你使用的路由器性能较低，大概率会出现重启Crash服务很久没有可用网络连接或无法启动Crash主服务的问题</p>
@@ -507,7 +535,7 @@ iptables -t nat -A ntp_force_local -s 192.168.0.0/16 -j DNAT --to-destination 19
 <p>虽然有些夸大其词的嫌疑，但不可否认的是这方面的问题的确存在，如果暂不考虑校园网的设备限制，以本校不久前翻修的校园网的质量（常时速度在300Mbps到500Mbps左右）来看，29元的大流量和高通话卡＋30元每月的宽带费用着实是不算昂贵，若是以一个寝室为一个单位缴纳网络费用，似乎的确达不到目前宽带资费的平均水平。</p>
 <p>从这个角度看，<strong>付费制</strong>校园网认证系统对于同时在线的网络设备数限制就合理了起来，若不对其加以限制，必然会出现学生之间共享网络的情况，造成学校方面在网络服务收入方面的损失，乃至收不回成本，而若是对有需要的学生网开一面放宽设备数限制，又势必会出现难以识别学生的申请究竟是个人需要还是借此共享网络，从而产生纠纷和困难，这种吃力不讨好的事情大部分高校自然是唯恐避之不及。</p>
 <p>但另一方面的问题在于，校园网由于其面向的对象，天生应具有教育属性，要求每个学生每月支付宽带费用甚至还需要开通一张（可能）用不到的校园卡，以达到运营商和学校期望的“合理网络费用”似乎本身就是一种不合理，再结合每年开学时本校某些学院甚至将办校园卡作为报到流程的一个必须环节，这其中的是非，显然就有些耐人寻味了。</p>
-<p>如此看来，无论是谋求共享网络的学生，亦或是想收回网络供应成本的学校和老师，似乎都有其道理，但笔者个人还是希望，中国大学各个环节上的决策者和负责人能保留对学生的一份理解，至少，不要把原本提供给学生的服务做成了赚钱的生意。毕竟，大部分人曾经都是学生，只是他们中的某些人成为了厉害的大人，离这个身份越来越远，从而忘记了这一点。</p>
+<p>如此看来，无论是谋求共享网络的学生，亦或是想收回网络供应成本的学校和老师，似乎都有其道理，但笔者个人还是希望，中国大学各个环节上的决策者和负责人能保留对学生的一份理解，至少，不要把原本提供给学生的服务做成了赚钱的生意。毕竟，大部分人曾经都是学生，只是他们中的某些人成为了厉害的大人，离这个身份越来越远，从而忘记了这一点罢了。</p>
 
 </section>
 
@@ -547,7 +575,7 @@ iptables -t nat -A ntp_force_local -s 192.168.0.0/16 -j DNAT --to-destination 19
 
 
         <span>
-            最后更新于 Aug 28, 2024 08:43 CST
+            最后更新于 Aug 28, 2024 10:52 CST
         </span>
     </section></footer>
 
