@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='这篇文章记录了笔者在校园网环境突然添加设备共享检测后的处理及踩坑'><title>在某大学搭建校园网路由器并尝试反共享检测笔记</title>
+
+<link rel='canonical' href='https://www.cherryswood.cloudns.ch/2024/%E5%9C%A8%E6%9F%90%E5%A4%A7%E5%AD%A6%E6%90%AD%E5%BB%BA%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B9%B6%E5%B0%9D%E8%AF%95%E5%8F%8D%E5%85%B1%E4%BA%AB%E6%A3%80%E6%B5%8B%E7%AC%94%E8%AE%B0/'>
+
+<link rel="stylesheet" href="/scss/style.min.46208cabd58e8bcef0cfb7d7ea6b561adcca3b91dd1fc6657493a44f03c5db75.css"><meta property='og:title' content='在某大学搭建校园网路由器并尝试反共享检测笔记'>
+<meta property='og:description' content='这篇文章记录了笔者在校园网环境突然添加设备共享检测后的处理及踩坑'>
+<meta property='og:url' content='https://www.cherryswood.cloudns.ch/2024/%E5%9C%A8%E6%9F%90%E5%A4%A7%E5%AD%A6%E6%90%AD%E5%BB%BA%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B9%B6%E5%B0%9D%E8%AF%95%E5%8F%8D%E5%85%B1%E4%BA%AB%E6%A3%80%E6%B5%8B%E7%AC%94%E8%AE%B0/'>
+<meta property='og:site_name' content='樱木の碎碎念'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='校园网路由器' /><meta property='article:tag' content='OPenWRT' /><meta property='article:tag' content='Shellcrash' /><meta property='article:published_time' content='2024-08-27T14:01:12&#43;08:00'/><meta property='article:modified_time' content='2024-08-28T17:41:13&#43;08:00'/>
+<meta name="twitter:title" content="在某大学搭建校园网路由器并尝试反共享检测笔记">
+<meta name="twitter:description" content="这篇文章记录了笔者在校园网环境突然添加设备共享检测后的处理及踩坑">
+    <link rel="shortcut icon" href="https://www.cherryswood.cloudns.ch/favicon.ico" />
+
+  
+
+<style>
+    :root {
+        --article-font-family: "Noto Serif SC", var(--base-font-family);
+    }
+</style>
+
+<script> 
+		(function () {
+		    const customFont = document.createElement('link');
+		    customFont.href = "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&display=swap"; 
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+
+    </head>
+    <body class="
+    article-page
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    <!-- 
+        extended
+     -->
+    on-phone--column extended
+">
+    
+<div id="article-toolbar">
+    <a href="https://www.cherryswood.cloudns.ch/" class="back-home">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+        <span>返回</span>
+    </a>
+</div>
+    <aside class="sidebar left-sidebar sticky">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header class="site-info">
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu15346423414449182880.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">💡</span>
+                
+            </figure>
+            
+        
+        
+        <h1 class="site-name"><a href="/">樱木の碎碎念</a></h1>
+        <h2 class="site-description">Straight ahead of him, noboady can go very far.</h2><ol class="social-menu">
+                
+                    <li>
+                        <a 
+                            href='mailto:mercycherrywood@outlook.com'
+                            target="_blank"
+                            title="Email"
+                        >
+                            
+                            
+                                <?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1723897754362" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4440" id="mx_n_1723897754363" width="24" height="24" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M838.954667 234.666667H170.666667c-3.626667 0-7.168 0.448-10.56 1.322666l323.690666 323.669334a21.333333 21.333333 0 0 0 30.165334 0L838.954667 234.666667z m46.144 14.186666l-260.693334 260.693334 262.933334 262.912c5.44-7.168 8.661333-16.106667 8.661333-25.792V277.333333c0-10.944-4.117333-20.906667-10.88-28.48zM843.861333 789.333333l-249.6-249.621333-50.133333 50.133333a64 64 0 0 1-90.517333 0l-50.112-50.133333L156.373333 786.88c4.48 1.578667 9.28 2.453333 14.314667 2.453333h673.194667zM128.661333 754.218667L373.333333 509.525333 129.578667 265.813333A42.709333 42.709333 0 0 0 128 277.333333v469.333334c0 2.56 0.213333 5.098667 0.661333 7.552zM170.666667 192h682.666666a85.333333 85.333333 0 0 1 85.333334 85.333333v469.333334a85.333333 85.333333 0 0 1-85.333334 85.333333H170.666667a85.333333 85.333333 0 0 1-85.333334-85.333333V277.333333a85.333333 85.333333 0 0 1 85.333334-85.333333z" fill="currentColor" p-id="4441"></path></svg>
+                            
+                        </a>
+                    </li>
+                
+            </ol></header>
+
+    <ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>friends</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        
+            <li id="dark-mode-toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <span>暗色模式</span>
+            </li>
+        
+    </ol>
+</aside>
+
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E6%A0%A1%E5%9B%AD%E7%BD%91%E7%9B%B8%E5%85%B3/" >
+                校园网相关
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/2024/%E5%9C%A8%E6%9F%90%E5%A4%A7%E5%AD%A6%E6%90%AD%E5%BB%BA%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B9%B6%E5%B0%9D%E8%AF%95%E5%8F%8D%E5%85%B1%E4%BA%AB%E6%A3%80%E6%B5%8B%E7%AC%94%E8%AE%B0/">在某大学搭建校园网路由器并尝试反共享检测笔记</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        这篇文章记录了笔者在校园网环境突然添加设备共享检测后的处理及踩坑
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Aug 27, 2024</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-words">
+                    4846字，预计需要10分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="开始之前">开始之前</h2>
+<p>笔者就读于一所名不见经传的双非大学，没有精力也没有兴趣深入了解中国校园网总体的发展模式和现状，因而这篇文章所叙述的校园网环境状况可能并不适用于其他学校，文章内的所有评价也仅代表笔者有限的个人视角。阅读过程中如有不适可自行跳转到自己需要的部分进行阅读即可。</p>
+<p>另外，此反检测方案有一定成本，如果没有合适的服务器（节点）请参考<a class="link" href="https://hetong-re4per.com/posts/multi-device-detection/"  target="_blank" rel="noopener"
+    >这篇文章</a>编译固件及后续设置</p>
+<h2 id="背景">背景</h2>
+<p>先粗略介绍一下本校的校园网基本状况：我校校园网由移动联通电信三方混合供应，不允许学生从校外办理宽带使用，校园宽带强行绑定一张校园卡，月租为59每月，但校园网宽带连接后需要使用学号进行身份认证，但同一学号仅支持两个设备在线（一般为电脑/手机），笔者对这个价格其实没有意见，但限制的设备数对笔者而言实在有些捉襟见肘。因而开始研究如何使用路由器进行网络共享。</p>
+<h2 id="过程">过程</h2>
+<p>首先需要明确的是，在考虑校园网的设备共享检测之前，我们首先需要解决一个问题：<strong>如何使我们的路由器具有完成校园网认证的能力？</strong> 在Windows环境下进行常规认证时我们需要在网页进行认证(如深蓝)或下载某些认证客户端（如锐捷)进行认证，对于网页，我们可以使用Python程序解决，对于客户端我们同样可以使用插件解决，但想要在路由器中安装Python或插件都需要一个相对开放的系统，而大多数路由器的原厂系统显然不在此列，因此我们需要为路由器重新刷写一个系统，这里以<strong>Openwrt</strong>为例</p>
+<h3 id="解锁sshtelnet">解锁SSH（Telnet）</h3>
+<p>想要自由刷写路由器内的文件我们首先要获得SSH权限，这一步各个路由器各有不同，已知的是几乎大部分小米路由器都有成熟的解锁SSH(Telnet))的方案（没有的话也有申请解锁的官方渠道），因此这部分的教程笔者会列出几个后文提到的路由器型号的教程，其他型号的路由器建议自行在Bing或Google搜索 “路由器型号＋解锁SSH”如果还未购买路由器建议看看斐讯K2P/小米R3G/小米（红米AC2100）这几个型号，解锁方式都不算复杂</p>
+<p>对于Xiaomi/Redmi AC2100:可以参考<a class="link" href="https://blog.csdn.net/qq_29183811/article/details/114577257"  target="_blank" rel="noopener"
+    >这篇文章</a> (参照此教程可以跳过下一步刷写Breed的步骤)</p>
+<p>对于小米路由器3g可以参考<a class="link" href="https://www.right.com.cn/forum/thread-8278054-1-1.html"  target="_blank" rel="noopener"
+    >这篇文章</a></p>
+<p>对于斐讯K2P可以参考<a class="link" href="https://www.right.com.cn/forum/thread-217088-1-1.html"  target="_blank" rel="noopener"
+    >这篇文章</a></p>
+<h3 id="刷入breed">刷入Breed</h3>
+<blockquote>
+<p>Breed 是国内个人 <a class="link" href="https://github.com/hackpascal"  target="_blank" rel="noopener"
+    >hackpascal</a> 开发的闭源 Bootloader，也被称为“不死鸟”</p>
+<p>因为有些官方升级固件自带 bootloader，如果从官方固件升级，会导致现有 bootloader 被覆盖。而当 Breed 更新固件时，它会自动删除固件附带的引导加载程序，因此可以防止 Breed 被覆盖</p>
+</blockquote>
+<p>令人遗憾地是，Breed的刷入在不同路由器下同样也有所不同，因此同样放上几个型号的刷入教程供各位参考</p>
+<p>对于小米路由器3g可以参考<a class="link" href="https://blog.csdn.net/michaelchain/article/details/124263191"  target="_blank" rel="noopener"
+    >这篇文章</a></p>
+<p>对于斐讯K2P可以参考<a class="link" href="https://ericclose.github.io/phicomm-k2p-Padavan.html"  target="_blank" rel="noopener"
+    >这篇文章</a></p>
+<p><strong>注意</strong>：上面列出的大部分教程中都有备份原固件这一步，为了确保安全请务必进行备份</p>
+<h3 id="云编译openwrt">云编译OpenWRT</h3>
+<p>打开<a class="link" href="openwrt.ai" >openwrt.ai</a></p>
+<p>选择你的路由器型号</p>
+<p>点击自定义固件</p>
+<p>在此处填入如下包名</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 949; 
+			flex-basis: 2278px"
+	>
+	<a href="/2024/%E5%9C%A8%E6%9F%90%E5%A4%A7%E5%AD%A6%E6%90%AD%E5%BB%BA%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B9%B6%E5%B0%9D%E8%AF%95%E5%8F%8D%E5%85%B1%E4%BA%AB%E6%A3%80%E6%B5%8B%E7%AC%94%E8%AE%B0/image/1724744356305.png" data-size="1756x185">
+		<img src="/2024/%E5%9C%A8%E6%9F%90%E5%A4%A7%E5%AD%A6%E6%90%AD%E5%BB%BA%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B9%B6%E5%B0%9D%E8%AF%95%E5%8F%8D%E5%85%B1%E4%BA%AB%E6%A3%80%E6%B5%8B%E7%AC%94%E8%AE%B0/image/1724744356305.png"
+			width="1756"
+			height="185"
+			srcset="/2024/%E5%9C%A8%E6%9F%90%E5%A4%A7%E5%AD%A6%E6%90%AD%E5%BB%BA%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B9%B6%E5%B0%9D%E8%AF%95%E5%8F%8D%E5%85%B1%E4%BA%AB%E6%A3%80%E6%B5%8B%E7%AC%94%E8%AE%B0/image/1724744356305_hu18008021367054251983.png 480w, /2024/%E5%9C%A8%E6%9F%90%E5%A4%A7%E5%AD%A6%E6%90%AD%E5%BB%BA%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B9%B6%E5%B0%9D%E8%AF%95%E5%8F%8D%E5%85%B1%E4%BA%AB%E6%A3%80%E6%B5%8B%E7%AC%94%E8%AE%B0/image/1724744356305_hu17397138826518596328.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><strong>注意：本校校园网认证使用旧版算法的锐捷客户端，因此采用mentohust模拟认证客户端，如果你的学校采用网页认证可能需要加入Python3软件包并寻找合适的认证代码，如果mentohust不适用你的学校可能是采用了新版算法，请参考<a class="link" href="https://github.com/updateing/minieap"  target="_blank" rel="noopener"
+    >Minieap项目</a>。</strong></p>
+<p>下面的自定义选项按自己的需求更改即可，也可不改</p>
+<p>之后点击构建，等待构建完成后下载留存文件</p>
+<h3 id="通过breed刷入openwrt">通过Breed刷入OpenWRT</h3>
+<p>首先在openwrt.ai中下载临时镜像</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 1503; 
+			flex-basis: 3608px"
+	>
+	<a href="/2024/%E5%9C%A8%E6%9F%90%E5%A4%A7%E5%AD%A6%E6%90%AD%E5%BB%BA%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B9%B6%E5%B0%9D%E8%AF%95%E5%8F%8D%E5%85%B1%E4%BA%AB%E6%A3%80%E6%B5%8B%E7%AC%94%E8%AE%B0/image/1724746984393.png" data-size="1624x108">
+		<img src="/2024/%E5%9C%A8%E6%9F%90%E5%A4%A7%E5%AD%A6%E6%90%AD%E5%BB%BA%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B9%B6%E5%B0%9D%E8%AF%95%E5%8F%8D%E5%85%B1%E4%BA%AB%E6%A3%80%E6%B5%8B%E7%AC%94%E8%AE%B0/image/1724746984393.png"
+			width="1624"
+			height="108"
+			srcset="/2024/%E5%9C%A8%E6%9F%90%E5%A4%A7%E5%AD%A6%E6%90%AD%E5%BB%BA%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B9%B6%E5%B0%9D%E8%AF%95%E5%8F%8D%E5%85%B1%E4%BA%AB%E6%A3%80%E6%B5%8B%E7%AC%94%E8%AE%B0/image/1724746984393_hu11522949610128617614.png 480w, /2024/%E5%9C%A8%E6%9F%90%E5%A4%A7%E5%AD%A6%E6%90%AD%E5%BB%BA%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B9%B6%E5%B0%9D%E8%AF%95%E5%8F%8D%E5%85%B1%E4%BA%AB%E6%A3%80%E6%B5%8B%E7%AC%94%E8%AE%B0/image/1724746984393_hu9108542894708033374.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>接着将路由器WAN口连接至电脑，按住路由器复位键后插入电源</p>
+<p>进入192.168.1.1 Breed后台</p>
+<p>单击固件备份，点击EEPROM</p>
+<p>(<strong>注意</strong>：该文件记录着此台路由器特有信息，请一定要进行备份)</p>
+<p>备份完成后点击 <code>固件更新</code>，选择刚刚下载的临时镜像并上传，刷入完成后重启</p>
+<p>待路由器重启完成后进入后台（默认为10.0.0.1）</p>
+<p>用户名root,密码默认为password或root</p>
+<p>进入路由器后台后单击 <strong>系统-备份与升级-刷写固件</strong></p>
+<p>之后选择上一步中云编译得到的固件，上传后刷入</p>
+<p>重启后OpenWRT刷入完成</p>
+<h3 id="部署mentohust认证">部署Mentohust认证</h3>
+<p>完成基本设置后，在侧边栏中选择 <code> 服务</code>-<code>Mentohust</code></p>
+<p>点击启用，输入ISP(学校)给你的用户名和密码，接口如果不是WAN的话记得改成WAN</p>
+<p>在 <code>高级设置</code>将客户端版本号更改为你的学校使用的客户端版本号，我这边是4.99</p>
+<p>某些学校开启了客户端验证的话可能需要抓包生成DataPack文件以及锐捷客户端的依赖文件，具体请自行搜索 “mentohust抓包”/“锐捷客户端验证”等关键词</p>
+<p>选择保存并应用后检查上方 日志界面中是否输出信息，并确认路由器是否可以上网</p>
+<h3 id="部署反检测">部署反检测</h3>
+<p>经过实践，本校在不久前部署了设备共享检测方案，如果你的路由器进行上一步动作后可以正常使用则不必进行后面的动作</p>
+<p>考虑到成本问题，这里推荐优先使用比较常用的UA2F＋防火墙规则的反检测方案，但云编译固件需要的软件包和本教程有所不同</p>
+<p>请参考<a class="link" href="https://hetong-re4per.com/posts/multi-device-detection/"  target="_blank" rel="noopener"
+    >这篇文章</a></p>
+<p>若不想使用此方案或效果不佳，你需要拥有自己的服务器节点或<strong>海外服务器节点的订阅链接，具体操作如下：</strong></p>
+<p><strong>警告：进行下面的步骤之前，您需要确保自己拥有至少一个公网服务器 节点 或 订阅链接</strong></p>
+<p>进入路由器后台，点击服务-终端，输入你的路由器管理员用户名（root）和密码</p>
+<p>输入以下代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">export url=&#39;https://fastly.jsdelivr.net/gh/juewuy/ShellCrash@master&#39; <span class="err">&amp;&amp;</span> sh -c &#34;(curl -kfsSl (curl−kfsSlurl/install.sh)&#34; <span class="err">&amp;&amp;</span> source /etc/profile <span class="err">&amp;</span>&gt; /dev/null</span></span></code></pre></td></tr></table>
+</div>
+</div>
+<p>选择 <code>1 公测版，</code>选择 <code>1 安装在 /etc 目录</code>，选择 <code>1 确认</code>。安装完成之后，运行 <code>crash</code> 命令，选择 <code>1 路由设备配置局域网透明代理</code>，选择 <code> 0 不启用推荐的自动任务配置</code>，选择 <code>0 不导入配置文件</code>，选择 <code> 0 不立即启动服务</code>，此时会进入 ShellCrash 的主菜单，选择 <code>0 退出脚本</code>。</p>
+<p>接下来，在终端输入 <code>crash</code>呼出主菜单，输入 <code>9 更新/卸载</code>， <code>2 切换内核文件</code>  <code>3 Meta内核</code>，此时Shellcrash会自动下载内核文件并安装，选择 <code>0不保留相关数据库文件</code></p>
+<p>之后请获取一份用于反检测的配置文件，这里给出<a class="link" href="https://github.com/SunBK201"  target="_blank" rel="noopener"
+    >SunBK</a>大佬的<a class="link" href="https://cdn.jsdelivr.net/gh/SunBK201/MyProfiles@master/SunBK201_Clash_Campus.yaml"  target="_blank" rel="noopener"
+    >懒人配置</a>，使用记事本直接复制粘贴或是用其他方式下载源文件</p>
+<p>找到其中这段代码：</p>
+<pre><code>#--------------------------------------------------------------------------------------#
+proxies:
+#--------------------------------------------------------------------------------------#
+proxy-providers:
+</code></pre>
+<p>在 <code>proxy-providers:</code>后填入你的节点订阅链接，更改文件以后缀名为 <code>config.yaml </code>，保存文件</p>
+<p>进入OpenWRT管理界面，登录后点击 <code>系统</code>-<code>文件助手</code>，在文件列表中选择 <code>tmp</code>目录，将刚刚保存的 <code>config.yaml</code>上传至目录</p>
+<p>之后重新在服务-终端中登录并执行 <code>crash</code>命令，选择 <code>6 导入配置文件</code>-<code>4 本地上传完整配置文件</code>，根据提示确认 <code>导入配置文件</code></p>
+<p>导入完成后会返回主界面，输入1来重启crash服务，等待片刻后服务会成功重启，待网络连接正常后反检测部署完成</p>
+<p>若此步骤出现问题，可参考文章中的 <code>故障排查</code> 部分</p>
+<h3 id="防火墙配置">防火墙配置</h3>
+<p>在确保Shellcrash可以正常运行后，进入OpenWRT 网络-防火墙-自定义规则中添加以下规则</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">iptables -t mangle -A POSTROUTING -j TTL --ttl-set 128</span></span></code></pre></td></tr></table>
+</div>
+</div>
+<p>对于某些学校，可能还需要：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">#由于本校局域网是A类网，所以我将这一条注释掉了，具体要不要注释结合你所在的校园网
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">#iptables -t mangle -A IPID_MOD -d 10.0.0.0/8 -j RETURN
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">iptables -t mangle -A IPID_MOD -d 172.16.0.0/12 -j RETURN
+</span></span><span class="line"><span class="cl">iptables -t mangle -A IPID_MOD -d 192.168.0.0/16 -j RETURN
+</span></span><span class="line"><span class="cl">iptables -t mangle -A IPID_MOD -d 255.0.0.0/8 -j RETURN
+</span></span><span class="line"><span class="cl">iptables -t mangle -A IPID_MOD -j MARK --set-xmark 0x10/0x10
+</span></span><span class="line"><span class="cl">iptables -t nat -N ntp_force_local
+</span></span><span class="line"><span class="cl">iptables -t nat -I PREROUTING -p udp --dport 123 -j ntp_force_local
+</span></span><span class="line"><span class="cl">iptables -t nat -A ntp_force_local -d 0.0.0.0/8 -j RETURN
+</span></span><span class="line"><span class="cl">iptables -t nat -A ntp_force_local -d 127.0.0.0/8 -j RETURN
+</span></span><span class="line"><span class="cl">iptables -t nat -A ntp_force_local -d 192.168.0.0/16 -j RETURN
+</span></span><span class="line"><span class="cl">iptables -t nat -A ntp_force_local -s 192.168.0.0/16 -j DNAT --to-destination 192.168.1.1</span></span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="故障排查">故障排查</h3>
+<h4 id="性能问题导致的服务重启或无法启动">性能问题导致的服务重启或无法启动</h4>
+<p>按上面的步骤配置完成后，若你使用的路由器性能较低，大概率会出现重启Crash服务很久没有可用网络连接或无法启动Crash主服务的问题</p>
+<p>出现此问题的原因是配置文件存在过滤广告的规则而部分路由器性能（内存）无法运行如此庞大的规则判定</p>
+<p>出现此情况后，可尝试删除</p>
+<pre><code>Advertising:
+    type: http
+    behavior: domain
+    path: ./RuleSet/Advertising.yaml
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Advertising/Advertising_Domain.yaml
+    interval: 86400
+  Advertising-antiAD:
+    type: http
+    behavior: domain
+    path: ./RuleSet/Advertising-antiAD.yaml
+    url: https://anti-ad.net/clash.yaml
+    interval: 86400
+</code></pre>
+<p>以及：</p>
+<pre><code> # Advertising &amp; Hijacking &amp; Privacy
+  - DOMAIN-SUFFIX,loli.net,CN # SM.MS
+  - DOMAIN,click.simba.taobao.com,CN # Web Recommend
+  - RULE-SET,Advertising,REJECT
+  - RULE-SET,Advertising-antiAD,REJECT
+</code></pre>
+<p>删除后，请重新进行上传及导入配置文件的步骤。</p>
+<p>精简配置文件后，Shellcrash应该可以稳定运行。</p>
+<h4 id="steam下载流量">Steam下载流量</h4>
+<p>Steam下载服务器的流量有概率会从你的服务器进行转发，为了节省流量，你可能需要设置直连规则，规则的位置需要在配置文件中以下字段的上方。</p>
+<pre><code> # UA
+  - DST-PORT,80,Switch
+  - DST-PORT,8080,Switch
+</code></pre>
+<p><strong>提示</strong>：连接的steam下载服务器链接可以通过Shellcrash的本地面板中通过观察流量的方式得到服务器链接，并编写形如下文的规则</p>
+<pre><code>- DOMAIN-SUFFIX,得到的下载服务器链接,DIRECT
+</code></pre>
+<h2 id="写在最后的一些思考">写在最后的一些思考</h2>
+<p>动手写这篇文章之前，笔者其实一直在思考一个问题，对于校园网来说，如此大费周章地部署多设备共享检测的意义究竟在哪？</p>
+<p>明面上的原因似乎很简单，无非是政府在 教科信厅函〔2021〕33号中提出的</p>
+<blockquote>
+<p>　<strong>六、保障校园网络绿色安全稳定</strong></p>
+<p>　　高等学校应严格按照《中华人民共和国网络安全法》《中华人民共和国数据安全法》《中华人民共和国个人信息保护法》等法律法规和政策文件要求，落实各项安全防护要求；应对本单位主管的信息系统（网站）统一分配IP（网络互联协议）地址和域名，建立校园局域网的出口集中管理机制；<strong>严格落实互联网访问实名认证制度，规范外来访客网络访问管理，实行上网地址统一管理和网络准入统一认证制度。</strong></p>
+</blockquote>
+<p>但仔细想想，只靠这样的说法似乎也站不住脚，以笔者本人为例，困扰我的并非认证制度，而是学校校园网中心一刀切式的将设备数限制在一个电脑和一个手机，对于笔者这种多设备同时使用的学生而言，切换设备联网需要来回认证着实是造成了很多困扰，而<strong>限制设备个数，检测路由器这样的手段</strong>，其实也并非是政府提出的，防止网络被共享并用于非法活动这个原因显然也说不过去，因为哪怕使用路由器，WLAN的信号范围显然十分有限，最多满足一个寝室的上网需求，在监管上并没有带来可见的风险。</p>
+<p>显然，此类型的共享检测系统之所以诞生并迅速在全国各大高校里普及还存在别的原因</p>
+<p>在著名校园网络共享检测方案供应商深澜软件的官网上，有这样一段话</p>
+<blockquote>
+<p>目前，大多高校数宽带业务都是基于包月或者按照时间计费的形式开展的，沿用了家庭用户的计费方式，而且考虑到学生的支付能力比较低，定价也一般比家庭用户要低。事实上，高校学生用户利用宽带计费技术的不足，往往以个人的名义申请宽带而几户共用，并且分摊费用，给运营商造成了巨大的经济损失，在高校网络付费用户和非法接入用户的比例从1:2 到1:10 不等。</p>
+<p>Srun 防代理系统是一款针对宽带共享接入管理设计和开发的网络行为分析及管理网关设备，通过基于DPI深度包检测的应用层特征报文分析，提供用户共享私接行为的实时控制和监控，避免共享接入行为带来的潜在风险和损失，使运营商的网络运营更加健康有序和可持续发展。</p>
+</blockquote>
+<p>虽然有些夸大其词的嫌疑，但不可否认的是这方面的问题的确存在，如果暂不考虑校园网的设备限制，以本校不久前翻修的校园网的质量（常时速度在300Mbps到500Mbps左右）来看，29元的大流量和高通话卡＋30元每月的宽带费用着实是不算昂贵，若是以一个寝室为一个单位缴纳网络费用，似乎的确达不到目前宽带资费的平均水平。</p>
+<p>从这个角度看，<strong>付费制</strong>校园网认证系统对于同时在线的网络设备数限制就合理了起来，若不对其加以限制，必然会出现学生之间共享网络的情况，造成学校方面在网络服务收入方面的损失，乃至收不回成本，而若是对有需要的学生网开一面放宽设备数限制，又势必会出现难以识别学生的申请究竟是个人需要还是借此共享网络，从而产生纠纷和困难，这种吃力不讨好的事情大部分高校自然是唯恐避之不及。</p>
+<p>但另一方面的问题在于，校园网由于其面向的对象，天生应具有教育属性，要求每个学生每月支付宽带费用甚至还需要开通一张（可能）用不到的校园卡，以达到运营商和学校期望的“合理网络费用”似乎本身就是一种不合理，再结合每年开学时本校某些学院甚至将办校园卡作为报到流程的一个必须环节，这其中的是非，显然就有些耐人寻味了。</p>
+<p>如此看来，无论是谋求共享网络的学生，亦或是想收回网络供应成本的学校和老师，似乎都有其道理，但笔者个人还是希望，中国大学各个环节上的决策者和负责人能保留对学生的一份理解，至少，不要把原本提供给学生的服务做成了赚钱的生意。毕竟，大部分人曾经都是学生，只是他们中的某些人成为了厉害的大人，离这个身份越来越远，从而忘记了这一点罢了。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8/">校园网路由器</a>
+        
+            <a href="/tags/openwrt/">OPenWRT</a>
+        
+            <a href="/tags/shellcrash/">Shellcrash</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            最后更新于 Aug 28, 2024 17:41 CST
+        </span>
+    </section></footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+     
+    
+
+    <footer class="site-footer">
+  
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<script>
+(function(u, c) {
+  var d = document, t = 'script', o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+  o.src = u;
+  if (c) { o.addEventListener('load', function(e) { c(e); }); }
+  s.parentNode.insertBefore(o, s);
+})('//cdn.bootcss.com/pangu/3.3.0/pangu.min.js', function() {
+  pangu.spacingPage();
+});
+</script>
+
+    <section class="copyright">
+        &copy; 
+        
+        2024 <a href="https://stack-theme-mod.vercel.app/">Cherryswood's Blog</a>·<i class="fas fa-bell"></i> <a id="days">0</a>Days<br>
+      共书写了7.4k字·共 2篇文章</br><span><p>
+    </section>
+    
+    <section class="powerby">
+        
+            Life is too long to end at a grave. <br/>
+         <br />
+        <br />
+         <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">© Licensed Under CC BY-NC-SA 4.0</a>
+    </section>
+
+<script>
+var s1 = '2024-08-17';
+s1 = new Date(s1.replace(/-/g, "/"));
+s2 = new Date();
+var days = s2.getTime() - s1.getTime();
+var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+document.getElementById('days').innerHTML = number_of_days;
+</script>
+    
+</footer>
+
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+    
+    
+    <aside class="sidebar right-sidebar sticky">
+        
+            <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索</label>
+            <input name="keyword" required placeholder="输入关键词..." />
+        
+            <button title="搜索">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+        
+            
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#开始之前">开始之前</a></li>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#过程">过程</a>
+      <ol>
+        <li><a href="#解锁sshtelnet">解锁SSH（Telnet）</a></li>
+        <li><a href="#刷入breed">刷入Breed</a></li>
+        <li><a href="#云编译openwrt">云编译OpenWRT</a></li>
+        <li><a href="#通过breed刷入openwrt">通过Breed刷入OpenWRT</a></li>
+        <li><a href="#部署mentohust认证">部署Mentohust认证</a></li>
+        <li><a href="#部署反检测">部署反检测</a></li>
+        <li><a href="#防火墙配置">防火墙配置</a></li>
+        <li><a href="#故障排查">故障排查</a>
+          <ol>
+            <li><a href="#性能问题导致的服务重启或无法启动">性能问题导致的服务重启或无法启动</a></li>
+            <li><a href="#steam下载流量">Steam下载流量</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#写在最后的一些思考">写在最后的一些思考</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+        
+            <section class="widget categories">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-infinity" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M9.828 9.172a4 4 0 1 0 0 5.656 a10 10 0 0 0 2.172 -2.828a10 10 0 0 1 2.172 -2.828 a4 4 0 1 1 0 5.656a10 10 0 0 1 -2.172 -2.828a10 10 0 0 0 -2.172 -2.828" />
+</svg>
+
+
+  
+        </div> 
+        <h2 class="widget-title section-title">Categories</h2>
+    <div class="widget-categories--list">
+<div class="widget">
+    <h3 class="widget-title"> </h3>
+    <div class="widget-body">
+        <div class="category-list">
+            <div class="category-list-item"><a href="https://www.cherryswood.cloudns.ch/categories/android-%E6%95%99%E7%A8%8B/" class="category-list-link">android 教程<span class="category-list-count">1</a>
+            </span></div>
+            <div class="category-list-item"><a href="https://www.cherryswood.cloudns.ch/categories/%E6%A0%A1%E5%9B%AD%E7%BD%91%E7%9B%B8%E5%85%B3/" class="category-list-link">校园网相关<span class="category-list-count">1</a>
+            </span></div>
+        </div>
+    </div>
+</div>
+    </div>
+    </section>
+        
+            <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-infinity" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M9.828 9.172a4 4 0 1 0 0 5.656 a10 10 0 0 0 2.172 -2.828a10 10 0 0 1 2.172 -2.828 a4 4 0 1 1 0 5.656a10 10 0 0 1 -2.172 -2.828a10 10 0 0 0 -2.172 -2.828" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">归档</h2>
+
+        
+        
+        
+        
+        
+        <div class="widget-archive--list">
+            <div class="archives-year">
+                    <a href="/archives/#2024">
+                        
+                            <span class="year">2024</span>
+                            <span class="count">2</span>
+                        
+                    </a> 
+                </div>
+            
+        </div>
+    </section>
+        
+            <section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">标签云</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/openwrt/" class="font_size_1">
+                OPenWRT
+            </a>
+        
+            <a href="/tags/shellcrash/" class="font_size_1">
+                Shellcrash
+            </a>
+        
+            <a href="/tags/%E4%B8%89%E6%98%9F%E5%B9%B3%E6%9D%BF/" class="font_size_1">
+                三星平板
+            </a>
+        
+            <a href="/tags/%E5%AE%89%E5%8D%93%E9%94%AE%E7%9B%98/" class="font_size_1">
+                安卓键盘
+            </a>
+        
+            <a href="/tags/%E5%AE%9E%E4%BD%93%E9%94%AE%E7%9B%98/" class="font_size_1">
+                实体键盘
+            </a>
+        
+            <a href="/tags/%E6%89%8B%E5%86%99%E7%AC%94/" class="font_size_1">
+                手写笔
+            </a>
+        
+            <a href="/tags/%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8/" class="font_size_1">
+                校园网路由器
+            </a>
+        
+    </div>
+</section>
+        
+    </aside>
+
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
