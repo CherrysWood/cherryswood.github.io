@@ -9,7 +9,7 @@
 <meta property='og:description' content='这是一篇关于如何优雅使用三星平板外接键盘和手写笔的指南'>
 <meta property='og:url' content='https://www.cherryswood.cloudns.ch/2024/%E6%9D%82%E8%B0%88%E4%B8%89%E6%98%9F%E5%B9%B3%E6%9D%BF%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BD%93%E9%94%AE%E7%9B%98%E5%92%8C%E6%89%8B%E5%86%99%E7%AC%94%E8%BE%93%E5%85%A5%E6%B3%95%E4%BC%98%E5%8C%96%E6%8C%87%E5%8C%97/'>
 <meta property='og:site_name' content='樱木の碎碎念'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='三星平板' /><meta property='article:tag' content='实体键盘' /><meta property='article:tag' content='安卓键盘' /><meta property='article:tag' content='手写笔' /><meta property='article:published_time' content='2024-08-16T20:23:14&#43;08:00'/><meta property='article:modified_time' content='2024-08-27T10:36:55&#43;08:00'/><meta property='og:image' content='https://www.cherryswood.cloudns.ch/2024/%E6%9D%82%E8%B0%88%E4%B8%89%E6%98%9F%E5%B9%B3%E6%9D%BF%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BD%93%E9%94%AE%E7%9B%98%E5%92%8C%E6%89%8B%E5%86%99%E7%AC%94%E8%BE%93%E5%85%A5%E6%B3%95%E4%BC%98%E5%8C%96%E6%8C%87%E5%8C%97/1723885610601.jpg' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='三星平板' /><meta property='article:tag' content='实体键盘' /><meta property='article:tag' content='安卓键盘' /><meta property='article:tag' content='手写笔' /><meta property='article:published_time' content='2024-08-16T20:23:14&#43;08:00'/><meta property='article:modified_time' content='2024-09-04T21:05:55&#43;08:00'/><meta property='og:image' content='https://www.cherryswood.cloudns.ch/2024/%E6%9D%82%E8%B0%88%E4%B8%89%E6%98%9F%E5%B9%B3%E6%9D%BF%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BD%93%E9%94%AE%E7%9B%98%E5%92%8C%E6%89%8B%E5%86%99%E7%AC%94%E8%BE%93%E5%85%A5%E6%B3%95%E4%BC%98%E5%8C%96%E6%8C%87%E5%8C%97/1723885610601.jpg' />
 <meta name="twitter:title" content="【杂谈】三星平板使用实体键盘和手写笔输入法优化指北">
 <meta name="twitter:description" content="这是一篇关于如何优雅使用三星平板外接键盘和手写笔的指南"><meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content='https://www.cherryswood.cloudns.ch/2024/%E6%9D%82%E8%B0%88%E4%B8%89%E6%98%9F%E5%B9%B3%E6%9D%BF%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BD%93%E9%94%AE%E7%9B%98%E5%92%8C%E6%89%8B%E5%86%99%E7%AC%94%E8%BE%93%E5%85%A5%E6%B3%95%E4%BC%98%E5%8C%96%E6%8C%87%E5%8C%97/1723885610601.jpg' />
@@ -321,7 +321,7 @@
 
 
                 <time class="article-words">
-                    1833字，预计需要4分钟
+                    1832字，预计需要4分钟
                 </time>
             </div>
         
@@ -425,10 +425,10 @@
 寻找解决方式的时候看到Keymapper这个插件，但似乎对Shift映射组合键的支持并不好，例如设置短按Shift映射组合键时长按Shift再按某些标点符号会导致打不出相关标点（如 “？”），无奈只能放弃Gboard。<br/>直到当天在一加Pad Pro板块闲逛时发现了搜狗输入法的一加定制版，下载之后惊奇的发现随手写功能居然是可用的，并且中文输入的候选栏是基本跟随的，为什么是基本跟随呢？因为笔者在打这篇文章的时候发现这个候选框在上下反复横跳（笑）
 当然问题还是一样的，断开键盘后屏幕键盘自动会切回26键，为了解决这个问题笔者实在是翻了不少帖子，最终在某篇在DEX模式下使用第三方输入法的教程得到启发。
 <br/>既然我们已知：<br/><strong>三星键盘</strong>：可用手写笔/屏幕键盘不会随键盘断开重置到26Key/链接键盘中文输入候选框在下方
-<br/><strong>搜狗定制</strong>:可用手写笔/断开键盘重置26Key/连接键盘候选框跟随<br/>
-那我们能不能在连接键盘时使用搜狗定制版而在断开键盘时使用三星键盘呢?这样在任何情况下都能确保我们能使用手写笔输入且不会出现键盘重置的情况<br/>这就需要 用到一个叫<a class="link" href="https://absinthe.life/Anywhere-Docs/"  target="_blank" rel="noopener"
+<br/><strong>搜狗定制</strong>:可用手写笔/断开键盘重置26Key/连接键盘候选框跟随 <br/>
+那我们能不能在连接键盘时使用搜狗定制版而在断开键盘时使用三星键盘呢?这样在任何情况下都能确保我们能使用手写笔输入且不会出现键盘重置的情况 <br/>这就需要 用到一个叫<a class="link" href="https://absinthe.life/Anywhere-Docs/"  target="_blank" rel="noopener"
     >Anywhere-</a> 的小工具，通过<a class="link" href="https://shizuku.rikka.app/zh-hans/"  target="_blank" rel="noopener"
-    >shizuku</a> 提权执行shell来完成几个输入法之间的切换，这里给出切换两个输入法的命令<br/><br/><strong>切换为三星输入法</strong>
+    >shizuku</a> 提权执行shell来完成几个输入法之间的切换，这里给出切换两个输入法的命令 <br/><br/><strong>切换为三星输入法</strong>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -487,8 +487,130 @@
 	
 </figure>
 <br/>
-<strong>注意：</strong> Samsung/SOUGOU为自己设定的shortcut名称，因你的设置而改变，如果对Anywhere设置过程有疑问可参考<a class="link" href="https://www.coolapk.com/feed/39012003?shareKey=MTNhZTcxYmMwNWZmNjZiZjVmOGI~&amp;shareUid=3269206&amp;shareFrom=com.coolapk.market_14.3.0-beta2"  target="_blank" rel="noopener"
-    >这篇文章</a><br/></p>
+<style type="text/css">
+     
+    .notice {
+        --title-color: #fff;
+        --title-background-color: #6be;
+        --content-color: #444;
+        --content-background-color: #e7f2fa;
+    }
+
+    .notice.info {
+        --title-background-color: #fb7;
+        --content-background-color: #fec;
+    }
+
+    .notice.tip {
+        --title-background-color: #5a5;
+        --content-background-color: #efe;
+    }
+
+    .notice.warning {
+        --title-background-color: #c33;
+        --content-background-color: #fee;
+    }
+
+     
+    @media (prefers-color-scheme:dark) {
+        .notice {
+            --title-color: #fff;
+            --title-background-color: #069;
+            --content-color: #ddd;
+            --content-background-color: #023;
+        }
+
+        .notice.info {
+            --title-background-color: #a50;
+            --content-background-color: #420;
+        }
+
+        .notice.tip {
+            --title-background-color: #363;
+            --content-background-color: #121;
+        }
+
+        .notice.warning {
+            --title-background-color: #800;
+            --content-background-color: #400;
+        }
+    }
+
+    body.dark .notice {
+        --title-color: #fff;
+        --title-background-color: #069;
+        --content-color: #ddd;
+        --content-background-color: #023;
+    }
+
+    body.dark .notice.info {
+        --title-background-color: #a50;
+        --content-background-color: #420;
+    }
+
+    body.dark .notice.tip {
+        --title-background-color: #363;
+        --content-background-color: #121;
+    }
+
+    body.dark .notice.warning {
+        --title-background-color: #800;
+        --content-background-color: #400;
+    }
+
+     
+    .notice {
+        padding: 18px;
+        line-height: 24px;
+        margin-bottom: 24px;
+        border-radius: 4px;
+        color: var(--content-color);
+        background: var(--content-background-color);
+    }
+
+    .notice p:last-child {
+        margin-bottom: 0
+    }
+
+     
+    .notice-title {
+        margin: -18px -18px 12px;
+        padding: 4px 18px;
+        border-radius: 4px 4px 0 0;
+        font-weight: 700;
+        color: var(--title-color);
+        background: var(--title-background-color);
+    }
+
+     
+    .icon-notice {
+        display: inline-flex;
+        align-self: center;
+        margin-right: 8px;
+    }
+
+    .icon-notice img,
+    .icon-notice svg {
+        height: 1em;
+        width: 1em;
+        fill: currentColor;
+    }
+
+    .icon-notice img,
+    .icon-notice.baseline svg {
+        top: .125em;
+        position: relative;
+    }
+</style><div class="notice note" >
+    <p class="notice-title">
+        <span class="icon-notice baseline">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 128 300 300">
+  <path d="M150 128c82.813 0 150 67.188 150 150 0 82.813-67.188 150-150 150C67.187 428 0 360.812 0 278c0-82.813 67.188-150 150-150Zm25 243.555v-37.11c0-3.515-2.734-6.445-6.055-6.445h-37.5c-3.515 0-6.445 2.93-6.445 6.445v37.11c0 3.515 2.93 6.445 6.445 6.445h37.5c3.32 0 6.055-2.93 6.055-6.445Zm-.39-67.188 3.515-121.289c0-1.367-.586-2.734-1.953-3.516-1.172-.976-2.93-1.562-4.688-1.562h-42.968c-1.758 0-3.516.586-4.688 1.563-1.367.78-1.953 2.148-1.953 3.515l3.32 121.29c0 2.734 2.93 4.882 6.64 4.882h36.134c3.515 0 6.445-2.148 6.64-4.883Z"/>
+</svg>
+
+        </span>注释</p><p>Samsung/SOUGOU为自己设定的shortcut名称，因你的设置而改变，如果对Anywhere设置过程有疑问可参考<a class="link" href="https://www.coolapk.com/feed/39012003?shareKey=MTNhZTcxYmMwNWZmNjZiZjVmOGI~&amp;shareUid=3269206&amp;shareFrom=com.coolapk.market_14.3.0-beta2"  target="_blank" rel="noopener"
+    >这篇文章</a> <br/></p></div>
+</p>
 <h2 id="总结">总结</h2>
 <p>如果你是一个习惯26键的玩家，那么搜狗输入法定制版对于三星实体键盘输入和手写笔输入已经算比较友好，而如果你习惯九键，可能就需要按照文章进行额外设置。</p>
 
@@ -532,7 +654,7 @@
 
 
         <span>
-            最后更新于 Aug 27, 2024 10:36 CST
+            最后更新于 Sep 04, 2024 21:05 CST
         </span>
     </section></footer>
 

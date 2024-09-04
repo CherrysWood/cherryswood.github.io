@@ -9,7 +9,7 @@
 <meta property='og:description' content='这篇文章记录了笔者在校园网环境突然添加设备共享检测后的处理及踩坑'>
 <meta property='og:url' content='https://www.cherryswood.cloudns.ch/2024/%E5%9C%A8%E6%9F%90%E5%A4%A7%E5%AD%A6%E6%90%AD%E5%BB%BA%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%B7%AF%E7%94%B1%E5%99%A8%E5%B9%B6%E5%B0%9D%E8%AF%95%E5%8F%8D%E5%85%B1%E4%BA%AB%E6%A3%80%E6%B5%8B%E7%AC%94%E8%AE%B0/'>
 <meta property='og:site_name' content='樱木の碎碎念'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='校园网路由器' /><meta property='article:tag' content='OPenWRT' /><meta property='article:tag' content='Shellcrash' /><meta property='article:published_time' content='2024-08-27T14:01:12&#43;08:00'/><meta property='article:modified_time' content='2024-08-28T17:50:24&#43;08:00'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='校园网路由器' /><meta property='article:tag' content='OPenWRT' /><meta property='article:tag' content='Shellcrash' /><meta property='article:published_time' content='2024-08-27T14:01:12&#43;08:00'/><meta property='article:modified_time' content='2024-09-04T21:14:15&#43;08:00'/>
 <meta name="twitter:title" content="在某大学搭建校园网路由器并尝试反共享检测笔记">
 <meta name="twitter:description" content="这篇文章记录了笔者在校园网环境突然添加设备共享检测后的处理及踩坑">
     <link rel="shortcut icon" href="https://www.cherryswood.cloudns.ch/favicon.ico" />
@@ -347,7 +347,129 @@
     >这篇文章</a></p>
 <p>对于斐讯K2P可以参考<a class="link" href="https://ericclose.github.io/phicomm-k2p-Padavan.html"  target="_blank" rel="noopener"
     >这篇文章</a></p>
-<p><strong>注意</strong>：上面列出的大部分教程中都有备份原固件这一步，为了确保安全请务必进行备份</p>
+<style type="text/css">
+     
+    .notice {
+        --title-color: #fff;
+        --title-background-color: #6be;
+        --content-color: #444;
+        --content-background-color: #e7f2fa;
+    }
+
+    .notice.info {
+        --title-background-color: #fb7;
+        --content-background-color: #fec;
+    }
+
+    .notice.tip {
+        --title-background-color: #5a5;
+        --content-background-color: #efe;
+    }
+
+    .notice.warning {
+        --title-background-color: #c33;
+        --content-background-color: #fee;
+    }
+
+     
+    @media (prefers-color-scheme:dark) {
+        .notice {
+            --title-color: #fff;
+            --title-background-color: #069;
+            --content-color: #ddd;
+            --content-background-color: #023;
+        }
+
+        .notice.info {
+            --title-background-color: #a50;
+            --content-background-color: #420;
+        }
+
+        .notice.tip {
+            --title-background-color: #363;
+            --content-background-color: #121;
+        }
+
+        .notice.warning {
+            --title-background-color: #800;
+            --content-background-color: #400;
+        }
+    }
+
+    body.dark .notice {
+        --title-color: #fff;
+        --title-background-color: #069;
+        --content-color: #ddd;
+        --content-background-color: #023;
+    }
+
+    body.dark .notice.info {
+        --title-background-color: #a50;
+        --content-background-color: #420;
+    }
+
+    body.dark .notice.tip {
+        --title-background-color: #363;
+        --content-background-color: #121;
+    }
+
+    body.dark .notice.warning {
+        --title-background-color: #800;
+        --content-background-color: #400;
+    }
+
+     
+    .notice {
+        padding: 18px;
+        line-height: 24px;
+        margin-bottom: 24px;
+        border-radius: 4px;
+        color: var(--content-color);
+        background: var(--content-background-color);
+    }
+
+    .notice p:last-child {
+        margin-bottom: 0
+    }
+
+     
+    .notice-title {
+        margin: -18px -18px 12px;
+        padding: 4px 18px;
+        border-radius: 4px 4px 0 0;
+        font-weight: 700;
+        color: var(--title-color);
+        background: var(--title-background-color);
+    }
+
+     
+    .icon-notice {
+        display: inline-flex;
+        align-self: center;
+        margin-right: 8px;
+    }
+
+    .icon-notice img,
+    .icon-notice svg {
+        height: 1em;
+        width: 1em;
+        fill: currentColor;
+    }
+
+    .icon-notice img,
+    .icon-notice.baseline svg {
+        top: .125em;
+        position: relative;
+    }
+</style><div class="notice warning" >
+    <p class="notice-title">
+        <span class="icon-notice baseline">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="126 76.5 300 300">
+  <path d="M297.431 324.397v-34.255c0-3.245-2.344-5.95-5.358-5.95h-32.146c-3.014 0-5.358 2.705-5.358 5.95v34.255c0 3.245 2.344 5.95 5.358 5.95h32.146c3.014 0 5.358-2.705 5.358-5.95Zm-.335-67.428 3.014-82.753c0-1.081-.502-2.524-1.674-3.425-1.005-.902-2.512-1.983-4.019-1.983h-36.834c-1.507 0-3.014 1.081-4.019 1.983-1.172.901-1.674 2.704-1.674 3.786l2.846 82.392c0 2.344 2.512 4.146 5.693 4.146h30.975c3.013 0 5.525-1.803 5.692-4.146Zm-2.344-168.39L423.34 342.425c3.683 7.032 3.516 15.686-.335 22.717-3.85 7.031-10.883 11.358-18.417 11.358H147.413c-7.534 0-14.566-4.327-18.417-11.358-3.85-7.031-4.018-15.685-.335-22.716L257.248 88.578C260.93 81.188 268.13 76.5 276 76.5c7.87 0 15.069 4.688 18.752 12.08Z"/>
+</svg>
+
+        </span>警告</p><p>上面列出的大部分教程中都有备份原固件这一步，为了确保安全请务必进行备份</p></div>
+
 <h3 id="云编译openwrt">云编译OpenWRT</h3>
 <p>打开<a class="link" href="openwrt.ai" >openwrt.ai</a></p>
 <p>选择你的路由器型号</p>
@@ -370,9 +492,17 @@
 	</a>
 	
 </figure></p>
-<p><strong>注意：本校校园网认证使用旧版算法的锐捷客户端，因此采用mentohust模拟认证客户端，如果你的学校采用网页认证可能需要加入Python3软件包并寻找合适的认证代码，如果mentohust不适用你的学校的锐捷客户端，那么学校可能是采用了新版算法，请参考<a class="link" href="https://github.com/updateing/minieap"  target="_blank" rel="noopener"
-    >Minieap项目</a>。</strong></p>
-<p>下面的自定义选项按自己的需求更改即可，也可不改</p>
+<p><div class="notice info" >
+    <p class="notice-title">
+        <span class="icon-notice baseline">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="92 59.5 300 300">
+  <path d="M292 303.25V272c0-3.516-2.734-6.25-6.25-6.25H267v-100c0-3.516-2.734-6.25-6.25-6.25h-62.5c-3.516 0-6.25 2.734-6.25 6.25V197c0 3.516 2.734 6.25 6.25 6.25H217v62.5h-18.75c-3.516 0-6.25 2.734-6.25 6.25v31.25c0 3.516 2.734 6.25 6.25 6.25h87.5c3.516 0 6.25-2.734 6.25-6.25Zm-25-175V97c0-3.516-2.734-6.25-6.25-6.25h-37.5c-3.516 0-6.25 2.734-6.25 6.25v31.25c0 3.516 2.734 6.25 6.25 6.25h37.5c3.516 0 6.25-2.734 6.25-6.25Zm125 81.25c0 82.813-67.188 150-150 150-82.813 0-150-67.188-150-150 0-82.813 67.188-150 150-150 82.813 0 150 67.188 150 150Z"/>
+</svg>
+
+        </span>信息</p><p>本校校园网认证使用旧版算法的锐捷客户端，因此采用mentohust模拟认证客户端，如果你的学校采用网页认证可能需要加入Python3软件包并寻找合适的认证代码，如果mentohust不适用你的学校的锐捷客户端，那么学校可能是采用了新版算法，请参考<a class="link" href="https://github.com/updateing/minieap"  target="_blank" rel="noopener"
+    >Minieap项目</a>。</p></div>
+
+下面的自定义选项按自己的需求更改即可，也可不改</p>
 <p>之后点击构建，等待构建完成后下载留存文件</p>
 <h3 id="通过breed刷入openwrt">通过Breed刷入OpenWRT</h3>
 <p>首先在openwrt.ai中下载临时镜像</p>
@@ -395,9 +525,17 @@
 </figure></p>
 <p>接着将路由器WAN口连接至电脑，按住路由器复位键后插入电源</p>
 <p>进入192.168.1.1 Breed后台</p>
-<p>单击固件备份，点击EEPROM</p>
-<p>(<strong>注意</strong>：该文件记录着此台路由器特有信息，请一定要进行备份)</p>
-<p>备份完成后点击 <code>固件更新</code>，选择刚刚下载的临时镜像并上传，刷入完成后重启</p>
+<p>单击固件备份，点击EEPROM
+<div class="notice warning" >
+    <p class="notice-title">
+        <span class="icon-notice baseline">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="126 76.5 300 300">
+  <path d="M297.431 324.397v-34.255c0-3.245-2.344-5.95-5.358-5.95h-32.146c-3.014 0-5.358 2.705-5.358 5.95v34.255c0 3.245 2.344 5.95 5.358 5.95h32.146c3.014 0 5.358-2.705 5.358-5.95Zm-.335-67.428 3.014-82.753c0-1.081-.502-2.524-1.674-3.425-1.005-.902-2.512-1.983-4.019-1.983h-36.834c-1.507 0-3.014 1.081-4.019 1.983-1.172.901-1.674 2.704-1.674 3.786l2.846 82.392c0 2.344 2.512 4.146 5.693 4.146h30.975c3.013 0 5.525-1.803 5.692-4.146Zm-2.344-168.39L423.34 342.425c3.683 7.032 3.516 15.686-.335 22.717-3.85 7.031-10.883 11.358-18.417 11.358H147.413c-7.534 0-14.566-4.327-18.417-11.358-3.85-7.031-4.018-15.685-.335-22.716L257.248 88.578C260.93 81.188 268.13 76.5 276 76.5c7.87 0 15.069 4.688 18.752 12.08Z"/>
+</svg>
+
+        </span>警告</p><p>EEPROM文件记录着此台路由器特有信息，请一定要进行备份</p></div>
+
+备份完成后点击 <code>固件更新</code>，选择刚刚下载的临时镜像并上传，刷入完成后重启</p>
 <p>待路由器重启完成后进入后台（默认为10.0.0.1）</p>
 <p>用户名root,密码默认为password或root</p>
 <p>进入路由器后台后单击 <strong>系统-备份与升级-刷写固件</strong></p>
@@ -580,7 +718,7 @@ proxy-providers:
 
 
         <span>
-            最后更新于 Aug 28, 2024 17:50 CST
+            最后更新于 Sep 04, 2024 21:14 CST
         </span>
     </section></footer>
 
