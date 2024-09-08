@@ -294,8 +294,8 @@ proxy-providers:
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;opkg update &lt;span class=&#34;err&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; opkg install iptables-mod-ipopt kmod-ipt-ipopt&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;p&gt;若代码不输出错误则进行下一步，若输出错误敬请确认自己的网络环境是否可以直连外网
-进入OpenWRT 网络-防火墙-自定义规则中添加以下规则&lt;/p&gt;
+&lt;p&gt;若代码不输出错误则进行下一步，若输出错误敬请确认自己的网络环境是否可以直连外网&lt;/p&gt;
+&lt;p&gt;进入OpenWRT 网络-防火墙-自定义规则中添加以下规则&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
