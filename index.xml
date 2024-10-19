@@ -256,14 +256,8 @@
 
 &lt;p&gt;进入路由器后台，点击服务-终端，输入你的路由器管理员用户名（root）和密码&lt;/p&gt;
 &lt;p&gt;输入以下代码&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;export url=&amp;#39;https://fastly.jsdelivr.net/gh/juewuy/ShellCrash@master&amp;#39; &lt;span class=&#34;err&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; sh -c &amp;#34;(curl -kfsSl (curl−kfsSlurl/install.sh)&amp;#34; &lt;span class=&#34;err&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; source /etc/profile &lt;span class=&#34;err&#34;&gt;&amp;amp;&lt;/span&gt;&amp;gt; /dev/null&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;export url=&#39;https://fastly.jsdelivr.net/gh/juewuy/ShellCrash@master&#39; &amp;amp;&amp;amp; sh -c &amp;quot;$(curl -kfsSl $url/install.sh)&amp;quot; &amp;amp;&amp;amp; source /etc/profile &amp;amp;&amp;gt; /dev/null
+&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;选择 &lt;code&gt;1 公测版，&lt;/code&gt;选择 &lt;code&gt;1 安装在 /etc 目录&lt;/code&gt;，选择 &lt;code&gt;1 确认&lt;/code&gt;。安装完成之后，运行 &lt;code&gt;crash&lt;/code&gt; 命令，选择 &lt;code&gt;1 路由设备配置局域网透明代理&lt;/code&gt;，选择 &lt;code&gt; 0 不启用推荐的自动任务配置&lt;/code&gt;，选择 &lt;code&gt;0 不导入配置文件&lt;/code&gt;，选择 &lt;code&gt; 0 不立即启动服务&lt;/code&gt;，此时会进入 ShellCrash 的主菜单，选择 &lt;code&gt;0 退出脚本&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;接下来，在终端输入 &lt;code&gt;crash&lt;/code&gt;呼出主菜单，输入 &lt;code&gt;9 更新/卸载&lt;/code&gt;， &lt;code&gt;2 切换内核文件&lt;/code&gt;  &lt;code&gt;3 Meta内核&lt;/code&gt;，此时Shellcrash会自动下载内核文件并安装，选择 &lt;code&gt;0不保留相关数据库文件&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;之后请获取一份用于反检测的配置文件，这里给出&lt;a class=&#34;link&#34; href=&#34;https://github.com/SunBK201&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
@@ -278,7 +272,7 @@ proxy-providers:
     type: http
     url: &amp;quot;&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;在 &lt;code&gt;url:&lt;/code&gt;后的&lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;内填入你的节点订阅链接，更改文件以后缀名为 &lt;code&gt;config.yaml &lt;/code&gt;，保存文件&lt;/p&gt;
+&lt;p&gt;在 &lt;code&gt;url:&lt;/code&gt;后的 &lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;内填入你的节点订阅链接，更改文件以后缀名为 &lt;code&gt;config.yaml &lt;/code&gt;，保存文件&lt;/p&gt;
 &lt;p&gt;进入OpenWRT管理界面，登录后点击 &lt;code&gt;系统&lt;/code&gt;-&lt;code&gt;文件助手&lt;/code&gt;，在文件列表中选择 &lt;code&gt;tmp&lt;/code&gt;目录，将刚刚保存的 &lt;code&gt;config.yaml&lt;/code&gt;上传至目录&lt;/p&gt;
 &lt;p&gt;之后重新在服务-终端中登录并执行 &lt;code&gt;crash&lt;/code&gt;命令，选择 &lt;code&gt;6 导入配置文件&lt;/code&gt;-&lt;code&gt;4 本地上传完整配置文件&lt;/code&gt;，根据提示确认 &lt;code&gt;导入配置文件&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;导入完成后会返回主界面，输入1来重启crash服务，等待片刻后服务会成功重启，待网络连接正常后反检测部署完成&lt;/p&gt;
